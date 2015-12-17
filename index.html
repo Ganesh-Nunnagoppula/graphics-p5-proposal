@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>Iterated Function Systems by architkarandikar</title>
+    <title>Iterated Function Systems by Ganesh-Nunnagoppula</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -13,15 +13,124 @@
     <section class="page-header">
       <h1 class="project-name">Iterated Function Systems</h1>
       <h2 class="project-tagline">15-662 Graphics Project 5 Proposal</h2>
-      <a href="https://github.com/architkarandikar/graphics-p5-proposal" class="btn">View on GitHub</a>
-      <a href="https://github.com/architkarandikar/graphics-p5-proposal/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/architkarandikar/graphics-p5-proposal/tarball/master" class="btn">Download .tar.gz</a>
+      <a href="https://github.com/Ganesh-Nunnagoppula/graphics-p5-proposal" class="btn">View on GitHub</a>
+      <a href="https://github.com/Ganesh-Nunnagoppula/graphics-p5-proposal/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/Ganesh-Nunnagoppula/graphics-p5-proposal/tarball/master" class="btn">Download .tar.gz</a>
     </section>
 
     <section class="main-content">
-      <p><strong>Team: Ganesh Nunnagopala (gnunnago), Archit Karandikar (akarandi)</strong></p>
+      <p><strong>Team: Ganesh Nunnagoppula (gnunnago), Archit Karandikar (akarandi)</strong></p>
 
-<p>In this project, we will extend the code for the 15-662 rasterization project (p1) to rasterize fractal patterns using <strong>Iterated Function Systems</strong>.</p>
+<p><em>Description</em></p>
+
+<p>In this project, we extended Assignment1 code to support rendering fractals. We support fractal specifications through svg file.</p>
+
+<p>The following were the goals proposed,</p>
+
+<ul>
+<li>Modify the p1 code to implement the IFS for the Sierpensky Traingle. Rasterize the image.</li>
+<li>Implement the IFS for the Barnsley Fern. Rasterize the image.</li>
+<li>Formalize a IFS-specification file format and implement the corresponding parser which renders a specified IFS.</li>
+<li>Modify the rendering procedure using an energy buffer and plot normalized irradiances.</li>
+<li>Render the background so that intensity falls off with increasing distance from the fractal.</li>
+<li>Replace the chaos game implementation with an implementation of the fractal frame algorithm.to implement log-density dsiplay rendering and coloured fractals.<br>
+</li>
+</ul>
+
+<p>Additional milestones:</p>
+
+<ul>
+<li>Create and render some IFSs which use the features mentioned above.</li>
+<li>Add support for colour specification in the IFS-specification file.</li>
+<li>Add key-based support for stepping through the fractal rendering process.</li>
+</ul>
+
+<p>We completed all the tasks except adding a key based support.</p>
+
+<p><em>SVG Parser</em></p>
+
+<div class="highlight highlight-source-shell"><pre><span class="pl-k">&lt;</span>svg height=<span class="pl-s"><span class="pl-pds">"</span>600<span class="pl-pds">"</span></span> width=<span class="pl-s"><span class="pl-pds">"</span>600<span class="pl-pds">"</span></span><span class="pl-k">&gt;</span>
+    <span class="pl-k">&lt;</span>ifs
+        fill=<span class="pl-s"><span class="pl-pds">"</span>#00ff00<span class="pl-pds">"</span></span>
+        <span class="pl-c1">bg</span>=<span class="pl-s"><span class="pl-pds">"</span>002E00<span class="pl-pds">"</span></span>
+        <span class="pl-c1">type</span>=<span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span>
+        seedx=<span class="pl-s"><span class="pl-pds">"</span>0<span class="pl-pds">"</span></span>
+        seedy=<span class="pl-s"><span class="pl-pds">"</span>0<span class="pl-pds">"</span></span>
+        weighted_transform_1=<span class="pl-s"><span class="pl-pds">"</span>matrix(0,0,0,0.16,0,0),1<span class="pl-pds">"</span></span>
+        weighted_transform_2=<span class="pl-s"><span class="pl-pds">"</span>matrix(0.85,-0.04,0.04,0.85,0,1.6),85<span class="pl-pds">"</span></span>
+        weighted_transform_3=<span class="pl-s"><span class="pl-pds">"</span>matrix(0.2,0.23,-0.26,0.22,0,1.6),7<span class="pl-pds">"</span></span>
+        weighted_transform_4=<span class="pl-s"><span class="pl-pds">"</span>matrix(-0.15,0.26,0.28,0.24,0,0.44),7<span class="pl-pds">"</span></span>
+        render_transformation=<span class="pl-s"><span class="pl-pds">"</span>matrix(85.71,0,0,50.0,300.0,50.0)<span class="pl-pds">"</span></span>
+    /<span class="pl-k">&gt;</span>
+<span class="pl-k">&lt;</span>/svg<span class="pl-k">&gt;</span></pre></div>
+
+<div class="highlight highlight-source-shell"><pre>fill: the fill color
+<span class="pl-c1">bg</span>: the background color
+seed: Specifies the initial seed point
+<span class="pl-c1">type</span>: <span class="pl-s"><span class="pl-pds">'</span>0<span class="pl-pds">'</span></span> specifies Sierpensky traingles, <span class="pl-s"><span class="pl-pds">'</span>1<span class="pl-pds">'</span></span> implies Barnsley farms, <span class="pl-s"><span class="pl-pds">'</span>2<span class="pl-pds">'</span></span> specifies fractal flames.
+weighted_transform_<span class="pl-k">&lt;</span>i<span class="pl-k">&gt;</span>: specifies the affine transform and its corresponding probability
+render_transformation: specifies the post transform</pre></div>
+
+<p><em>Sierpensky Triangles</em></p>
+
+<p><img src="https://github.com/Ganesh-Nunnagoppula/graphics-p5-proposal/blob/master/images/sierpensky/ST_bg.png?raw=true" alt=""></p>
+
+<p><em>Barnsley farms</em></p>
+
+<p>without super sampling
+<img src="https://github.com/Ganesh-Nunnagoppula/graphics-p5-proposal/blob/master/images/fern_s1.png?raw=true" alt=""></p>
+
+<p>with supersampling at 16X
+<img src="https://github.com/Ganesh-Nunnagoppula/graphics-p5-proposal/blob/master/images/fern_s16.png?raw=true" alt=""></p>
+
+<p><em>Irradiance Caching</em></p>
+
+<p><em>Distance Function</em></p>
+
+<p><em>Fractal Flames</em></p>
+
+<p>We implemented the fractal flame algorithm with color assigned to each affine transformation and a nonlinear variation after performing an affine transformation. The variation we used is</p>
+
+<div class="highlight highlight-source-shell"><pre>x = sin(x)
+y = sin(y)</pre></div>
+
+<p>The following is an image generated with a linear variation that is variation0 and each of the 3 affine transformations were assigned the colors red, green and blue. The affine transformations used were the same as that of sierpensky triangles.</p>
+
+<p><img src="https://github.com/Ganesh-Nunnagoppula/graphics-p5-proposal/blob/master/images/sierpensky/sp8.png?raw=true" alt=""></p>
+
+<p>The following is an image generated with the sinusoidal variation
+<img src="https://github.com/Ganesh-Nunnagoppula/graphics-p5-proposal/blob/master/images/fractal%20frame/sinPattern.png?raw=true" alt=""></p>
+
+<p>The following is an image generated with the sinusoidal variation with a different set of affine transformations
+<img src="https://github.com/Ganesh-Nunnagoppula/graphics-p5-proposal/blob/master/images/fractal%20frame/RedPattern.png?raw=true" alt=""></p>
+
+<p><em>Custom Fractals</em></p>
+
+<p>We generalized the sierpensky triangles to a polygon with a ration specified</p>
+
+<p>Image generated with &lt;&gt; vertices and ratio &lt;&gt;
+<img src="https://github.com/Ganesh-Nunnagoppula/graphics-p5-proposal/blob/master/images/sierpensky/sp1.png?raw=true" alt=""></p>
+
+<p>Image generated with &lt;&gt; vertices and ratio &lt;&gt;
+<img src="https://github.com/Ganesh-Nunnagoppula/graphics-p5-proposal/blob/master/images/sierpensky/sp2.png?raw=true" alt=""></p>
+
+<p>Image generated with &lt;&gt; vertices and ratio &lt;&gt;
+<img src="https://github.com/Ganesh-Nunnagoppula/graphics-p5-proposal/blob/master/images/sierpensky/sp3.png?raw=true" alt=""></p>
+
+<p>Image generated with &lt;&gt; vertices and ratio &lt;&gt;
+<img src="https://github.com/Ganesh-Nunnagoppula/graphics-p5-proposal/blob/master/images/sierpensky/sp4.png?raw=true" alt=""></p>
+
+<p>Image generated with &lt;&gt; vertices and ratio &lt;&gt;
+<img src="https://github.com/Ganesh-Nunnagoppula/graphics-p5-proposal/blob/master/images/sierpensky/sp5.png?raw=true" alt=""></p>
+
+<p>Image generated with &lt;&gt; vertices and ratio &lt;&gt;
+<img src="https://github.com/Ganesh-Nunnagoppula/graphics-p5-proposal/blob/master/images/sierpensky/sp6.png?raw=true" alt=""></p>
+
+<p>Image generated with &lt;&gt; vertices and ratio &lt;&gt;
+<img src="https://github.com/Ganesh-Nunnagoppula/graphics-p5-proposal/blob/master/images/sierpensky/sp7.png?raw=true" alt=""></p>
+
+<p>Image generated with &lt;&gt; vertices and ratio &lt;&gt;
+<img src="https://github.com/Ganesh-Nunnagoppula/graphics-p5-proposal/blob/master/images/sierpensky/sp9.png?raw=true" alt=""></p>
 
 <p>Iterated Function Systems start with a seed point and specify a Probability Distribution Function over affine transformations. In every iteration. the point is plotted and transformed according to the specified distribution.</p>
 
@@ -46,7 +155,7 @@
 </ul>
 
       <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/architkarandikar/graphics-p5-proposal">Iterated Function Systems</a> is maintained by <a href="https://github.com/architkarandikar">architkarandikar</a>.</span>
+        <span class="site-footer-owner"><a href="https://github.com/Ganesh-Nunnagoppula/graphics-p5-proposal">Iterated Function Systems</a> is maintained by <a href="https://github.com/Ganesh-Nunnagoppula">Ganesh-Nunnagoppula</a>.</span>
 
         <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
       </footer>
